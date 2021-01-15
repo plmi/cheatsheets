@@ -2,7 +2,6 @@
 
 ## General
 
-
 Search man pages (for syscalls)
 ```bash
 $ man -k write
@@ -37,7 +36,6 @@ Quickly disassemble opcodes
 $ echo -ne "\x6A\x7F\x5A\x54\x59\x31\xDB\x6A\x03\x58\xCD\x80\x51\xC3" | ndisasm -u -
 ```
 
-
 Calculate address of function
 ```bash
 # module's base address + offset of symbol = function address
@@ -69,6 +67,11 @@ $ for i in {1..3}; do ldd test | grep libc; done
 libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f6f07591000)
 libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2086ac7000)
 libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ff8f64f7000)
+```
+
+Check if stack is executable
+```bash
+$ readelf -a ./stack5 | grep GNU_STACK
 ```
 
 ## Handling binary output
@@ -245,6 +248,27 @@ code = 'Hello World\n'
 encoded = code[::-1].encode('utf-8').hex()
 
 # '0a646c726f57206f6c6c6548'
+```
+
+### shellcraft
+
+```bash
+$ asm 'mov eax, 0xdeadbeef' -f string
+b'\xb8\xef\xbe\xad\xde'
+
+# debug shellcode with gdb
+$ shellcraft i386.linux.echo "Hello" --debug
+
+# show help
+$ shellcraft i386.linux.dupsh -?
+Args: [sock (imm/reg) = ebp]
+```
+
+### Buffer Overflow Pattern
+
+```
+cyclic(50)
+cyclic_find(0x6161616c)
 ```
 
 ## gdb
